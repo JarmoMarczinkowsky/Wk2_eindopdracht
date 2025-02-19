@@ -34,12 +34,14 @@ namespace EindOpdracht.WebApi.Controllers
             return Ok(weatherForeCast);
         }
 
-        //[HttpPost(Name = "PostEnvironment2D")]
-        //public ActionResult Add(Environment2D environment2D)
-        //{
-        //    SqlEnvironment2DRepository.lstEnvironment2D.Add(environment2D);
-        //    return StatusCode(201);
-        //}
+        [HttpPost(Name = "CreateEnvironment2D")]
+        public async Task<ActionResult> Add(Environment2D environment2D)
+        {
+            //environment2D.Id = Guid.NewGuid();
+            environment2D.Id = null;
+            var createdWeatherForecast = await _sqlEnvironment2DRepository.InsertAsync(environment2D);
+            return Created();
+        }
 
         [HttpPut("{environmentID}", Name = "UpdateEnvironment2D")]
         public async Task<ActionResult> Update(int environmentID, Environment2D newEnvironment2D)
@@ -49,6 +51,7 @@ namespace EindOpdracht.WebApi.Controllers
             if (existingWeatherForecast == null)
                 return NotFound();
 
+            newEnvironment2D.Id = environmentID;
             await _sqlEnvironment2DRepository.UpdateAsync(newEnvironment2D);
 
             return Ok(newEnvironment2D);
@@ -129,9 +132,9 @@ namespace EindOpdracht.WebApi.Controllers
         //    return Ok();
         //}
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
     }
 }

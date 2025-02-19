@@ -54,7 +54,8 @@ namespace EindOpdracht.WebApi.Services
                 await sqlConnection.ExecuteAsync("UPDATE [Environment2D] SET " +
                                                  "Name = @Name, " +
                                                  "MaxHeight = @MaxHeight, " +
-                                                 "MaxLength = @MaxLength"
+                                                 "MaxLength = @MaxLength " + 
+                                                 "Where Id = @Id"
                                                  , environment);
 
             }
