@@ -1,4 +1,5 @@
 ﻿using EindOpdracht.WebApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,6 +7,7 @@ namespace EindOpdracht.WebApi.Controllers
 {
     [ApiController]
     [Route("environment2d")]
+    //[Authorize]
     public class Environment2DController : Controller
     {
         private readonly ILogger<Environment2DController> _logger;
@@ -57,40 +59,6 @@ namespace EindOpdracht.WebApi.Controllers
             return Ok(newEnvironment2D);
         }
 
-        //[HttpPut("{environmentId}", Name = "UpdateEnvironment2D")]
-        //public ActionResult Update(int environmentId, Environment2D environment2D)
-        //{
-        //    if (environmentId != environment2D.Id)
-        //    {
-        //        return BadRequest("The id of the object did not match the id of the route");
-        //    }
-
-        //    Environment2D environmentToChange = GetEnvironment2DToUpdate(environmentId);
-
-        //    if (environmentToChange == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    SqlEnvironment2DRepository.lstEnvironment2D.Remove(environmentToChange);
-        //    SqlEnvironment2DRepository.lstEnvironment2D.Add(environment2D);
-            
-        //    return StatusCode(202);
-        //}
-
-        private Environment2D GetEnvironment2DToUpdate(int id)
-        {
-            foreach (Environment2D item in SqlEnvironment2DRepository.lstEnvironment2D)
-            {
-                if (item.Id == id)
-                {
-                    return item;
-                }
-            }
-
-            return null;
-        }
-
         [HttpDelete("{environmentID}", Name = "DeleteWeatherForecastByDate")]
         public async Task<IActionResult> Update(int environmentID)
         {
@@ -103,38 +71,5 @@ namespace EindOpdracht.WebApi.Controllers
 
             return Ok();
         }
-
-        //[HttpDelete("{EnvironmentId}", Name = "DeleteEnvironmentByName")]
-        //public IActionResult Delete(int id)
-        //{
-        //    Environment2D environmentToDelete = GetEnvironment2DToUpdate(id);
-
-        //    if (environmentToDelete == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    SqlEnvironment2DRepository.lstEnvironment2D.Remove(environmentToDelete);
-
-        //    return StatusCode(200);
-        //}
-
-        //[HttpDelete("{EnvironmentID}", Name = "DeleteEnvironmentByID")]
-        //public async Task<IActionResult> Update(int environmentID)
-        //{
-        //    var existingWeatherForecast = await _sqlEnvironment2DRepository.ReadAsync(environmentID);
-
-        //    if (existingWeatherForecast == null)
-        //        return NotFound();
-
-        //    await _sqlEnvironment2DRepository.DeleteAsync(environmentID);
-
-        //    return Ok();
-        //}
-
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
     }
 }
