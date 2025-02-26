@@ -20,14 +20,14 @@ namespace EindOpdracht.WebApi.Controllers
         }
 
         [HttpGet(Name = "GetEnvironment2D")]
-        public async Task<ActionResult<IEnumerable<WeatherForecast>>> Get()
+        public async Task<ActionResult<IEnumerable<Environment2D>>> Get()
         {
             var weatherForecasts = await _sqlEnvironment2DRepository.ReadAsync();
             return Ok(weatherForecasts);
         }
 
         [HttpGet("{environmentId}", Name = "ReadEnvironment2D")]
-        public async Task<ActionResult<WeatherForecast>> Get(int environmentId)
+        public async Task<ActionResult<Environment2D>> Get(Guid environmentId)
         {
             var weatherForeCast = await _sqlEnvironment2DRepository.ReadAsync(environmentId);
             if (weatherForeCast == null)
@@ -40,13 +40,13 @@ namespace EindOpdracht.WebApi.Controllers
         public async Task<ActionResult> Add(Environment2D environment2D)
         {
             //environment2D.Id = Guid.NewGuid();
-            environment2D.Id = null;
+            environment2D.Id = Guid.NewGuid();
             var createdWeatherForecast = await _sqlEnvironment2DRepository.InsertAsync(environment2D);
             return Created();
         }
 
         [HttpPut("{environmentID}", Name = "UpdateEnvironment2D")]
-        public async Task<ActionResult> Update(int environmentID, Environment2D newEnvironment2D)
+        public async Task<ActionResult> Update(Guid environmentID, Environment2D newEnvironment2D)
         {
             var existingWeatherForecast = await _sqlEnvironment2DRepository.ReadAsync(environmentID);
 
@@ -60,7 +60,7 @@ namespace EindOpdracht.WebApi.Controllers
         }
 
         [HttpDelete("{environmentID}", Name = "DeleteWeatherForecastByDate")]
-        public async Task<IActionResult> Update(int environmentID)
+        public async Task<IActionResult> Update(Guid environmentID)
         {
             var existingWeatherForecast = await _sqlEnvironment2DRepository.ReadAsync(environmentID);
 

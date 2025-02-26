@@ -14,7 +14,7 @@ namespace EindOpdracht.WebApi.Services
             _connstr = connectionString;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Guid id)
         {
             using (var sqlConnection = new SqlConnection(_connstr))
             {
@@ -30,7 +30,7 @@ namespace EindOpdracht.WebApi.Services
             }
         }
 
-        public async Task<Environment2D?> ReadAsync(int id)
+        public async Task<Environment2D?> ReadAsync(Guid id)
         {
             using (var sqlConnection = new SqlConnection(_connstr))
             {

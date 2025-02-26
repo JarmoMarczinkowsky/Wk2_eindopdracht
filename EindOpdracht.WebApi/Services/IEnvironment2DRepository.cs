@@ -3,7 +3,7 @@
     public interface IEnvironment2DRepository 
     {
         public Task<IEnumerable<Environment2D>> ReadAsync();
-        public Task DeleteAsync(int id);
+        public Task DeleteAsync(Guid id);
     }
 
 }
