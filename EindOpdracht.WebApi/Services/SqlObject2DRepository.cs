@@ -3,13 +3,13 @@ using Microsoft.Data.SqlClient;
 
 namespace EindOpdracht.WebApi.Services
 {
-    public class Object2DRepository
+    public class SqlObject2DRepository
     {
-        public static List<Object2D> lstObject2d = new List<Object2D>();
+        //public static List<Object2D> lstObject2d = new List<Object2D>();
 
         private string _connstr;
 
-        public Object2DRepository(string connectionString)
+        public SqlObject2DRepository(string connectionString)
         {
             _connstr = connectionString;
         }
