@@ -12,59 +12,83 @@ namespace EindOpdracht.WebApi.Controllers
     {
         private readonly ILogger<Environment2DController> _logger;
         private readonly SqlEnvironment2DRepository _sqlEnvironment2DRepository;
+        private readonly IAuthenticationService _authenticationService;
         //private static List<Environment2D> environment2Ds = [];
-        public Environment2DController(SqlEnvironment2DRepository sqlEnvironment2DRepository, ILogger<Environment2DController> logger)
+        public Environment2DController(SqlEnvironment2DRepository sqlEnvironment2DRepository, ILogger<Environment2DController> logger, IAuthenticationService authenticationService)
         {
             _sqlEnvironment2DRepository = sqlEnvironment2DRepository;
             _logger = logger;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet(Name = "GetEnvironment2D")]
         public async Task<ActionResult<IEnumerable<Environment2D>>> Get()
         {
-            var weatherForecasts = await _sqlEnvironment2DRepository.ReadAsync();
-            return Ok(weatherForecasts);
+            var environments = await _sqlEnvironment2DRepository.ReadAsync();
+            return Ok(environments);
         }
 
         [HttpGet("{environmentId}", Name = "ReadEnvironment2D")]
         public async Task<ActionResult<Environment2D>> Get(Guid environmentId)
         {
-            var weatherForeCast = await _sqlEnvironment2DRepository.ReadAsync(environmentId);
-            if (weatherForeCast == null)
+            var environment = await _sqlEnvironment2DRepository.ReadAsync(environmentId);
+            var currentUserId = _authenticationService.GetCurrentAuthenticatedUserId();
+
+            if(currentUserId == null)
+            {
+                return NotFound();
+            }
+
+            if (environment == null || currentUserId != environment.OwnerUserId)
                 return NotFound();
 
-            return Ok(weatherForeCast);
+            return Ok(environment);
         }
 
         [HttpPost(Name = "CreateEnvironment2D")]
         public async Task<ActionResult> Add(Environment2D environment2D)
         {
-            //environment2D.Id = Guid.NewGuid();
+            var currentUserId = _authenticationService.GetCurrentAuthenticatedUserId();
+
+            if(currentUserId == null)
+            {
+                return NotFound();
+            }
+
             environment2D.Id = Guid.NewGuid();
-            var createdWeatherForecast = await _sqlEnvironment2DRepository.InsertAsync(environment2D);
+            environment2D.OwnerUserId = currentUserId;
+
+            var createdEnvironment = await _sqlEnvironment2DRepository.InsertAsync(environment2D);
             return Created();
         }
 
         [HttpPut("{environmentID}", Name = "UpdateEnvironment2D")]
         public async Task<ActionResult> Update(Guid environmentID, Environment2D newEnvironment2D)
         {
-            var existingWeatherForecast = await _sqlEnvironment2DRepository.ReadAsync(environmentID);
+            var existingEnvironment = await _sqlEnvironment2DRepository.ReadAsync(environmentID);
+            var currentUserId = _authenticationService.GetCurrentAuthenticatedUserId();
 
-            if (existingWeatherForecast == null)
+            if (existingEnvironment == null || string.IsNullOrWhiteSpace(currentUserId))
                 return NotFound();
 
             newEnvironment2D.Id = environmentID;
+            newEnvironment2D.OwnerUserId = currentUserId;
             await _sqlEnvironment2DRepository.UpdateAsync(newEnvironment2D);
 
             return Ok(newEnvironment2D);
         }
 
-        [HttpDelete("{environmentID}", Name = "DeleteWeatherForecastByDate")]
+        [HttpDelete("{environmentID}", Name = "DeleteEnvironmentById")]
         public async Task<IActionResult> Update(Guid environmentID)
         {
-            var existingWeatherForecast = await _sqlEnvironment2DRepository.ReadAsync(environmentID);
+            var currentUserId = _authenticationService.GetCurrentAuthenticatedUserId();
 
-            if (existingWeatherForecast == null)
+            if (string.IsNullOrWhiteSpace(currentUserId))
+                return NotFound();
+
+            var existingEnvironment = await _sqlEnvironment2DRepository.ReadAsync(environmentID);
+
+            if (existingEnvironment == null || currentUserId != existingEnvironment.OwnerUserId)
                 return NotFound();
 
             await _sqlEnvironment2DRepository.DeleteAsync(environmentID);

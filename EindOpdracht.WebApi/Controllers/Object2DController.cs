@@ -7,9 +7,9 @@ namespace EindOpdracht.WebApi.Controllers
     [Route("object2d")]
     public class Object2DController : Controller
     {
-        private readonly ILogger<Environment2DController> _logger;
+        private readonly ILogger<Object2DController> _logger;
         private readonly SqlObject2DRepository _object2DRepository;
-        public Object2DController(SqlObject2DRepository object2DRepository, ILogger<Environment2DController> logger)
+        public Object2DController(SqlObject2DRepository object2DRepository, ILogger<Object2DController> logger)
         {
              _object2DRepository = object2DRepository;
             _logger = logger;
