@@ -52,14 +52,29 @@ namespace EindOpdracht.WebApi.Controllers
 
             if(currentUserId == null)
             {
-                return NotFound();
+                return Unauthorized();
+            }
+
+            var environmentsByUser = await _sqlEnvironment2DRepository.ReadWorldsFromUserAsync(currentUserId);
+            int userEnvironmentCount = environmentsByUser.Count();
+            if(userEnvironmentCount >= 10)
+            {
+                return BadRequest("User has too many worlds");
+            }
+            
+            foreach(var environments in environmentsByUser)
+            {
+                if(environments.Name == environment2D.Name)
+                {
+                    return BadRequest("World with name already exists");
+                }
             }
 
             environment2D.Id = Guid.NewGuid();
             environment2D.OwnerUserId = currentUserId;
 
             var createdEnvironment = await _sqlEnvironment2DRepository.InsertAsync(environment2D);
-            return Created();
+            return CreatedAtRoute("ReadEnvironment2D", new {environmentId = createdEnvironment.Id}, createdEnvironment);
         }
 
         [HttpPut("{environmentID}", Name = "UpdateEnvironment2D")]

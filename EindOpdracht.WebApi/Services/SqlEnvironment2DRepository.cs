@@ -30,6 +30,14 @@ namespace EindOpdracht.WebApi.Services
             }
         }
 
+        public async Task<IEnumerable<Environment2D?>> ReadWorldsFromUserAsync(string ownerUserId)
+        {
+            using (var sqlConnection = new SqlConnection(_connstr))
+            {
+                return await sqlConnection.QueryAsync<Environment2D>("SELECT * FROM [Environment2D] WHERE OwnerUserId = @OwnerUserId", new { ownerUserId });
+            }
+        }
+
         public async Task<Environment2D?> ReadAsync(Guid id)
         {
             using (var sqlConnection = new SqlConnection(_connstr))
@@ -42,7 +50,9 @@ namespace EindOpdracht.WebApi.Services
         {
             using (var sqlConnection = new SqlConnection(_connstr))
             {
-                var environmentId = await sqlConnection.ExecuteAsync("INSERT INTO [Environment2D] (Name, MaxHeight, MaxLength) VALUES (@Name, @MaxHeight, @MaxLength)", environment2D);
+                //Guid newId = Guid.NewGuid();
+                //environment2D.Id = newId;
+                var environmentId = await sqlConnection.ExecuteAsync("INSERT INTO [Environment2D] (Id, Name, OwnerUserId, MaxHeight, MaxLength) VALUES (@Id, @Name, @OwnerUserId, @MaxHeight, @MaxLength)", environment2D);
                 return environment2D;
             }
         }

@@ -8,9 +8,7 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -56,9 +54,6 @@ builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme)
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IAuthenticationService, AspNetIdentityAuthenticationService>();
-
-
-
 
 var app = builder.Build();
 app.UseAuthorization();
