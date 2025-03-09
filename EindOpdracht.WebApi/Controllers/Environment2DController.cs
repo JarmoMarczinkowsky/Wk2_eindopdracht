@@ -13,7 +13,7 @@ namespace EindOpdracht.WebApi.Controllers
         private readonly ILogger<Environment2DController> _logger;
         private readonly SqlEnvironment2DRepository _sqlEnvironment2DRepository;
         private readonly IAuthenticationService _authenticationService;
-        //private static List<Environment2D> environment2Ds = [];
+
         public Environment2DController(SqlEnvironment2DRepository sqlEnvironment2DRepository, ILogger<Environment2DController> logger, IAuthenticationService authenticationService)
         {
             _sqlEnvironment2DRepository = sqlEnvironment2DRepository;
@@ -24,7 +24,14 @@ namespace EindOpdracht.WebApi.Controllers
         [HttpGet(Name = "GetEnvironment2D")]
         public async Task<ActionResult<IEnumerable<Environment2D>>> Get()
         {
-            var environments = await _sqlEnvironment2DRepository.ReadAsync();
+            var currentUserId = _authenticationService.GetCurrentAuthenticatedUserId();
+
+            if(currentUserId == null)
+            {
+                return Unauthorized();
+            }
+
+            var environments = await _sqlEnvironment2DRepository.ReadWorldsFromUserAsync(currentUserId);
             return Ok(environments);
         }
 
