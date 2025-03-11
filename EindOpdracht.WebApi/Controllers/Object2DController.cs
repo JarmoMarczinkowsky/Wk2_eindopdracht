@@ -9,10 +9,12 @@ namespace EindOpdracht.WebApi.Controllers
     {
         private readonly ILogger<Object2DController> _logger;
         private readonly SqlObject2DRepository _object2DRepository;
-        public Object2DController(SqlObject2DRepository object2DRepository, ILogger<Object2DController> logger)
+        private readonly IAuthenticationService _authenticationService;
+        public Object2DController(SqlObject2DRepository object2DRepository, ILogger<Object2DController> logger, IAuthenticationService authenticationService)
         {
              _object2DRepository = object2DRepository;
             _logger = logger;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet("objects", Name = "ReadAllObjects")]
@@ -32,20 +34,27 @@ namespace EindOpdracht.WebApi.Controllers
             return Ok(objects);
         }
 
-        [HttpGet("{environmentId}/objects", Name = "ReadAllObjectsByEnvironment")]
-        public async Task<ActionResult<Object2D>> GetByEnvironmentId(Guid environmentId)
-        {
-            var objects = await _object2DRepository.ReadByEnvironmentIdAsync(environmentId);
-            return Ok(objects);
-        }
+        //[HttpGet("{environmentId}/objects", Name = "ReadAllObjectsByEnvironment")]
+        //public async Task<ActionResult<Object2D>> GetByEnvironmentId(Guid environmentId)
+        //{
+        //    var objects = await _object2DRepository.ReadObjectsByEnvironment(environmentId);
+        //    return Ok(objects);
+        //}
 
-        [HttpPost(Name = "CreateObject2D")]
+        [HttpPost("create", Name = "CreateObject2D")]
         public async Task<ActionResult> Add(Object2D object2D)
         {
+            var currentUserId = _authenticationService.GetCurrentAuthenticatedUserId();
+
+            if (currentUserId == null)
+            {
+                return Unauthorized();
+            }
+
             //environment2D.Id = Guid.NewGuid();
             object2D.Id = Guid.NewGuid();
             var createdObject = await _object2DRepository.InsertAsync(object2D);
-            return Created();
+            return CreatedAtRoute("CreateObject2D", new { id = createdObject.Id }, createdObject);
         }
 
         [HttpPut("{environmentID}", Name = "UpdateObject2D")]

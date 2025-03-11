@@ -84,6 +84,18 @@ namespace EindOpdracht.WebApi.Controllers
             return CreatedAtRoute("ReadEnvironment2D", new {environmentId = createdEnvironment.Id}, createdEnvironment);
         }
 
+        /// <summary>
+        /// For reading objects associated by the level
+        /// </summary>
+        /// <param name="environmentId"></param>
+        /// <returns></returns>
+        [HttpGet("{environmentId}/objects", Name = "ReadAllObjectsByEnvironment")]
+        public async Task<ActionResult<Object2D>> GetObjectsByEnvironmentId(Guid environmentId)
+        {
+            var objects = await _sqlEnvironment2DRepository.ReadObjectsByEnvironment(environmentId);
+            return Ok(objects);
+        }
+
         [HttpPut("{environmentID}", Name = "UpdateEnvironment2D")]
         public async Task<ActionResult> Update(Guid environmentID, Environment2D newEnvironment2D)
         {

@@ -46,6 +46,23 @@ namespace EindOpdracht.WebApi.Services
             }
         }
 
+        public async Task<IEnumerable<Object2D>> ReadObjectsByEnvironment(Guid environmentId)
+        {
+            using (var sqlConnection = new SqlConnection(_connstr))
+            {
+                return await sqlConnection.QueryAsync<Object2D>("SELECT * FROM [Object2D] WHERE EnvironmentID = @EnvironmentID", new { environmentId });
+            }
+        }
+
+        //public async Task<Object2D> InsertObjectByEnvironmentAsync(Object2D object2D)
+        //{
+        //    using (var sqlConnection = new SqlConnection(_connstr))
+        //    {
+        //        var objectId = await sqlConnection.ExecuteAsync("INSERT INTO [Object2D] (PrefabId, PositionX, PositionY, ScaleX, ScaleY, RotationZ, SortingLayer, EnvironmentID) VALUES (@PrefabId, @PositionX, @PositionY, @ScaleX, @ScaleY, @RotationZ, @SortingLayer, @EnvironmentID)", object2D);
+        //        return object2D;
+        //    }
+        //}
+
         public async Task<Environment2D> InsertAsync(Environment2D environment2D)
         {
             using (var sqlConnection = new SqlConnection(_connstr))
