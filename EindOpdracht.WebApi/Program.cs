@@ -18,7 +18,7 @@ builder.Services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
 var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString"); 
 var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
 
-builder.Services.AddTransient<SqlEnvironment2DRepository, SqlEnvironment2DRepository>(o => new SqlEnvironment2DRepository(sqlConnectionString));
+builder.Services.AddTransient<IEnvironment2DRepository, SqlEnvironment2DRepository>(o => new SqlEnvironment2DRepository(sqlConnectionString));
 builder.Services.AddTransient<SqlObject2DRepository, SqlObject2DRepository>(o => new SqlObject2DRepository(sqlConnectionString));
 
 builder.Services.AddAuthorization(options =>

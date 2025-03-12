@@ -11,10 +11,10 @@ namespace EindOpdracht.WebApi.Controllers
     public class Environment2DController : Controller
     {
         private readonly ILogger<Environment2DController> _logger;
-        private readonly SqlEnvironment2DRepository _sqlEnvironment2DRepository;
+        private readonly IEnvironment2DRepository _sqlEnvironment2DRepository;
         private readonly IAuthenticationService _authenticationService;
 
-        public Environment2DController(SqlEnvironment2DRepository sqlEnvironment2DRepository, ILogger<Environment2DController> logger, IAuthenticationService authenticationService)
+        public Environment2DController(IEnvironment2DRepository sqlEnvironment2DRepository, ILogger<Environment2DController> logger, IAuthenticationService authenticationService)
         {
             _sqlEnvironment2DRepository = sqlEnvironment2DRepository;
             _logger = logger;
