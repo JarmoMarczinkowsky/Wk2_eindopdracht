@@ -8,9 +8,9 @@ namespace EindOpdracht.WebApi.Controllers
     public class Object2DController : Controller
     {
         private readonly ILogger<Object2DController> _logger;
-        private readonly SqlObject2DRepository _object2DRepository;
+        private readonly IObject2dRepository _object2DRepository;
         private readonly IAuthenticationService _authenticationService;
-        public Object2DController(SqlObject2DRepository object2DRepository, ILogger<Object2DController> logger, IAuthenticationService authenticationService)
+        public Object2DController(IObject2dRepository object2DRepository, ILogger<Object2DController> logger, IAuthenticationService authenticationService)
         {
              _object2DRepository = object2DRepository;
             _logger = logger;
@@ -72,7 +72,7 @@ namespace EindOpdracht.WebApi.Controllers
         }
 
         [HttpDelete("{objectID}", Name = "DeleteObjectsById")]
-        public async Task<IActionResult> Update(Guid environmentID)
+        public async Task<IActionResult> Delete(Guid environmentID)
         {
             var existingObject = await _object2DRepository.ReadAsync(environmentID);
 

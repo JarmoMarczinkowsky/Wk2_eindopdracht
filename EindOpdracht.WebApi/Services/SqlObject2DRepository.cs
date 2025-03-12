@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace EindOpdracht.WebApi.Services
 {
-    public class SqlObject2DRepository
+    public class SqlObject2DRepository: IObject2dRepository
     {
         //public static List<Object2D> lstObject2d = new List<Object2D>();
 
