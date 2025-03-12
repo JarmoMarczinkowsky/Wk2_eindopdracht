@@ -6,6 +6,7 @@ using EindOpdracht.WebApi.Controllers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Components;
 
 namespace Wk2_Eindopracht_test
 {
@@ -53,6 +54,43 @@ namespace Wk2_Eindopracht_test
 
             var result = await _environment2dController!.Add(environmentNew);
             Assert.IsInstanceOfType(result, typeof(CreatedAtRouteResult));
+        }
+
+        [TestMethod]
+        public async Task Delete_CanDeleteEnvironment()
+        {
+            // Arrange
+            var environmentId = Guid.NewGuid();
+            var ownerUserId = Guid.NewGuid().ToString();
+
+            var existingEnvironment = new Environment2D
+            {
+                Id = environmentId,
+                Name = "Test Environment",
+                OwnerUserId = ownerUserId
+            };
+
+            // Mock authentication to return the correct user ID
+            _mockAuthenticationService!
+                .Setup(service => service.GetCurrentAuthenticatedUserId())
+                .Returns(ownerUserId);
+
+            // Mock repository to return an existing environment
+            _mockEnvironmentRepo!
+                .Setup(repo => repo.ReadAsync(environmentId))
+                .ReturnsAsync(existingEnvironment);
+
+            // Mock repository to successfully delete the environment
+            _mockEnvironmentRepo!
+                .Setup(repo => repo.DeleteAsync(environmentId))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _environment2dController!.Delete(environmentId);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            _mockEnvironmentRepo.Verify(repo => repo.DeleteAsync(environmentId), Times.Once);
         }
 
         [TestMethod]

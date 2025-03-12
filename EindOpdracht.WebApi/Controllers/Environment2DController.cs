@@ -113,7 +113,7 @@ namespace EindOpdracht.WebApi.Controllers
         }
 
         [HttpDelete("{environmentID}", Name = "DeleteEnvironmentById")]
-        public async Task<IActionResult> Update(Guid environmentID)
+        public async Task<IActionResult> Delete(Guid environmentID)
         {
             var currentUserId = _authenticationService.GetCurrentAuthenticatedUserId();
 
