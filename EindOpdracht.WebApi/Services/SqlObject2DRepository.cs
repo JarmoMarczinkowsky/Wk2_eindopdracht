@@ -62,16 +62,18 @@ namespace EindOpdracht.WebApi.Services
                 await sqlConnection.ExecuteAsync("UPDATE [Object2D] SET " +
                                                  "PrefabId = @PrefabId, " +
                                                  "PositionX = @PositionX, " +
-                                                 "PositionY = @PositionY," +
-                                                 "scaleX = @scaleX," +
-                                                 "scaleY = @scaleY," +
-                                                 "rotationZ = @rotationZ," +
-                                                 "sortingLayer = @sortingLayer," +
+                                                 "PositionY = @PositionY, " +
+                                                 "scaleX = @scaleX, " +
+                                                 "scaleY = @scaleY, " +
+                                                 "rotationZ = @rotationZ, " +
+                                                 "sortingLayer = @sortingLayer " +
                                                  "Where Id = @Id"
                                                  , object2D);
 
             }
         }
+
+
 
     }
 }

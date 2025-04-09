@@ -28,6 +28,7 @@ namespace EindOpdracht.WebApi.Controllers
         public async Task<ActionResult<Object2D>> Get(Guid objectId)
         {
             var objects = await _object2DRepository.ReadAsync(objectId);
+
             if (objects == null)
                 return NotFound();
 
@@ -57,17 +58,35 @@ namespace EindOpdracht.WebApi.Controllers
             return CreatedAtRoute("CreateObject2D", new { id = createdObject.Id }, createdObject);
         }
 
-        [HttpPut("{environmentID}", Name = "UpdateObject2D")]
-        public async Task<ActionResult> Update(Guid objectID, Object2D newObject2D)
-        {
-            var existingObject = await _object2DRepository.ReadAsync(objectID);
+        //[HttpPut("{environmentID}", Name = "UpdateObject2D")]
+        //public async Task<ActionResult> Update(Guid objectID, Object2D newObject2D)
+        //{
+        //    var existingObject = await _object2DRepository.ReadAsync(objectID);
 
+        //    if (existingObject == null)
+        //        return NotFound();
+
+        //    newObject2D.Id = objectID;
+        //    await _object2DRepository.UpdateAsync(newObject2D);
+
+        //    return Ok(newObject2D);
+        //}
+
+        [HttpPut("{objectID}", Name = "UpdateObjectsById")]
+        public async Task<ActionResult> UpdateSingleObject(Guid objectID, Object2D newObject2D)
+        {
+            var currentUserId = _authenticationService.GetCurrentAuthenticatedUserId();
+
+            if (currentUserId == null)
+            {
+                return Unauthorized();
+            }
+
+            var existingObject = await _object2DRepository.ReadAsync(objectID);
             if (existingObject == null)
                 return NotFound();
-
             newObject2D.Id = objectID;
             await _object2DRepository.UpdateAsync(newObject2D);
-
             return Ok(newObject2D);
         }
 
